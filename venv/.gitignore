@@ -1,0 +1,8 @@
+# Ignore everything
+*
+
+# But these files
+!.gitignore
+!configure_venv.sh
+!install_libraries.sh
+!requirements.txt
