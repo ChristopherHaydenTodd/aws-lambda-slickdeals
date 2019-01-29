@@ -3,7 +3,7 @@
     Purpose:
         Lambda Function for Pulling the top deals
         from slickdeals
-    Version: 1.0.0
+    Version: 1.0.1
 """
 
 # Python Library Imports
@@ -29,8 +29,10 @@ logging = loggers.get_stdout_logging(
 )
 
 # Globals
-SLICKDEALS_URL = "https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&searchin=first&rss=1"
+SLICKDEALS_URL =\
+    "https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&searchin=first&rss=1"
 SKILL_BUILDER = SkillBuilder()
+
 
 ###
 # Request Handlers
@@ -41,12 +43,14 @@ SKILL_BUILDER = SkillBuilder()
 def launch_request_handler(handler_input):
     """
     Purpose:
-        Handler The Launching of the Alexa Skill 
+        Handler The Launching of the Alexa Skill
     Args:
-        handler_input (Dict): Input data from the Alexa Skill 
+        handler_input (Dict): Input data from the Alexa Skill
     Return:
         alexa_reponse (Dict): Reponse for Alexa Skill to handle
     """
+    logging.info("In the LaunchRequest Handler")
+
     speech_text = "Welcome to the Slick Deals Alexa Skill"
 
     return (
@@ -61,12 +65,41 @@ def launch_request_handler(handler_input):
 def get_new_deals_intent_handler(handler_input):
     """
     Purpose:
-        Handler for getting new deals
+        Handler for getting new deals. Will pull deals from the RSS Feed and return them
     Args:
         handler_input (Dict): Input data from the Alexa Skill
     Return:
         alexa_reponse (Dict): Reponse for Alexa Skill to handle
     """
+    logging.info("In the GetNewDealsIntent Handler")
+
+    feed = get_slickdeals_feed(SLICKDEALS_URL)
+    deals = get_top_slickdeals(feed)
+
+    speech_text = "There are {0} deals. The first deal is {1}".format(
+        len(deals), deals[0]
+    )
+
+    return (
+        handler_input.response_builder.speak(speech_text)
+        .set_card(SimpleCard("Slick Deals", speech_text))
+        .set_should_end_session(True)
+        .response
+    )
+
+
+@SKILL_BUILDER.request_handler(can_handle_func=is_intent_name("GetSpecificDealsIntent"))
+def get_specfic_deals_intent_handler(handler_input):
+    """
+    Purpose:
+        Handler for getting new deals. Will pull deals from the RSS Feed based on
+        a specific filter and loop through until one is found
+    Args:
+        handler_input (Dict): Input data from the Alexa Skill
+    Return:
+        alexa_reponse (Dict): Reponse for Alexa Skill to handle
+    """
+    logging.info("In the GetSpecificDealsIntent Handler")
 
     feed = get_slickdeals_feed(SLICKDEALS_URL)
     deals = get_top_slickdeals(feed)
@@ -87,12 +120,13 @@ def get_new_deals_intent_handler(handler_input):
 def help_intent_handler(handler_input):
     """
     Purpose:
-        Handler for getting help for the skill 
+        Handler for getting help for the skill
     Args:
         handler_input (Dict): Input data from the Alexa Skill
     Return:
         alexa_reponse (Dict): Reponse for Alexa Skill to handle
     """
+    logging.info("In the AMAZON.HelpIntent Handler")
 
     speech_text = "There is no help yet"
 
@@ -119,6 +153,7 @@ def cancel_and_stop_intent_handler(handler_input):
     Return:
         alexa_reponse (Dict): Reponse for Alexa Skill to handle
     """
+    logging.info("In the AMAZON.CancelIntent/StopIntent Handler")
 
     speech_text = "Goodbye!"
 
@@ -143,6 +178,7 @@ def fallback_handler(handler_input):
     Return:
         alexa_reponse (Dict): Reponse for Alexa Skill to handle
     """
+    logging.info("In the AMAZON.FallbackIntent")
 
     speech_text = "That request is not available, try something else"
     reprompt_text = "try something else"
@@ -155,12 +191,13 @@ def fallback_handler(handler_input):
 def session_ended_request_handler(handler_input):
     """
     Purpose:
-        Handler for ending the session 
+        Handler for ending the session
     Args:
         handler_input (Dict): Input data from the Alexa Skill
     Return:
         alexa_reponse (Dict): Reponse for Alexa Skill to handle
     """
+    logging.info("In the SessionEndedRequest Handler")
 
     return handler_input.response_builder.response
 
@@ -177,14 +214,19 @@ def all_exception_handler(handler_input, exception):
     Return:
         alexa_reponse (Dict): Reponse for Alexa Skill to handle
     """
-    logger.error(exception, exc_info=True)
+    logging.excepttion(
+        f"Exception in lambda_entrypoint: {exception}", exc_info=True
+    )
 
     speech_text = "Sorry, there was some problem. Please try again"
     handler_input.response_builder.speak(speech_text).ask(speech_text)
 
     return handler_input.response_builder.response
 
+
 handler = SKILL_BUILDER.lambda_handler()
+
+
 ###
 # Slickdeals Functions
 ###
@@ -224,6 +266,7 @@ def get_slickdeals_feed(feed_url):
     Return:
         feed (Feed Object): Feed object from feedparser of the RSS Feed
     """
+    logging.info("Getting Slickdeals Feed")
 
     return feedparser.parse(feed_url)
 
@@ -240,6 +283,7 @@ def get_top_slickdeals(feed, keyword=None):
     Return:
         deals (List of Strings): Title of all deals pulled
     """
+    logging.info("Geting Top SlickDeals")
 
     if keyword:
         return [
