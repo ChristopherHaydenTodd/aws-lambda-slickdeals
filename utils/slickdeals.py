@@ -24,7 +24,7 @@ SLICKDEALS_URL =\
 ###
 
 
-def get_slickdeals(raw_deal_filter=None):
+def get_slickdeals(deal_filters=None):
     """
     Purpose:
         Function to get slickdeals from the Slickdeals RSS Feed
@@ -34,11 +34,6 @@ def get_slickdeals(raw_deal_filter=None):
         N/A
     """
     logging.info("Starting Function to pull top slickdeals")
-
-    if raw_deal_filter:
-        deal_filters = parse_raw_deal_filters(raw_deal_filter)
-    else:
-        deal_filters = None
 
     feed = get_slickdeals_feed(SLICKDEALS_URL)
     deals = get_top_slickdeals(feed, deal_filters=deal_filters)
@@ -92,6 +87,56 @@ def get_top_slickdeals(feed, deal_filters=None):
         deals = [shorten_deal_title(deal["title"]) for deal in feed["entries"]]
 
     return deals
+
+
+###
+# Slickdeals Personal Favorites
+###
+
+
+def get_chris_filters():
+    """
+    Purpose:
+        Get filters that Chris likes to search
+    Args:
+        N/A
+    Return:
+        deal_filters (List of Strings): Deal Type Filter to filter deals
+            in SlickDeals
+    """
+
+    return [
+        "baby",
+        "dog",
+        "dunkin",
+        "free",
+        "gift card",
+        "marriott",
+        "nfl",
+        "nintendo",
+        "photo",
+        "ps4",
+        "psvr",
+        "smart home",
+        "steam",
+        "xbox",
+    ]
+
+
+def get_brittany_filters():
+    """
+    Purpose:
+        Get filters that Brittany likes to search
+    Args:
+        N/A
+    Return:
+        deal_filters (List of Strings): Deal Type Filter to filter deals
+            in SlickDeals
+    """
+
+    return [
+        "disney",
+    ]
 
 
 ###
