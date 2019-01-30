@@ -10,6 +10,7 @@
 # Python Library Imports
 import json
 import logging
+from pprint import pprint
 import os
 import sys
 from argparse import ArgumentParser
@@ -38,9 +39,11 @@ def main():
 
     # lambda_entrypoint
 
-    deals_with_filter =\
-        slickdeals.get_slickdeals(raw_deal_filter="Tomb\n")
+    # deals_with_filter =\
+    #     slickdeals.get_slickdeals(raw_deal_filter="Tomb\n")
     deals_no_filter = slickdeals.get_slickdeals()
+
+    pprint(deals_no_filter)
 
     import pdb; pdb.set_trace()
 
