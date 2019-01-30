@@ -8,7 +8,6 @@
 
 # Python Library Imports
 from __future__ import print_function
-import feedparser
 import json
 import logging
 import os
@@ -21,6 +20,7 @@ from ask_sdk_model import Response
 
 # Local Library Imports
 from utils import loggers
+from utils import slickdeals
 
 # Configure Logging
 loggers.clear_log_handlers()
@@ -29,8 +29,6 @@ logging = loggers.get_stdout_logging(
 )
 
 # Globals
-SLICKDEALS_URL =\
-    "https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&searchin=first&rss=1"
 SKILL_BUILDER = SkillBuilder()
 
 
@@ -73,8 +71,7 @@ def get_new_deals_intent_handler(handler_input):
     """
     logging.info("In the GetNewDealsIntent Handler")
 
-    feed = get_slickdeals_feed(SLICKDEALS_URL)
-    deals = get_top_slickdeals(feed)
+    deals = slickdeals.get_slickdeals()
 
     speech_text = "There are {0} deals. The first deal is {1}".format(
         len(deals), deals[0]
@@ -101,8 +98,7 @@ def get_specfic_deals_intent_handler(handler_input):
     """
     logging.info("In the GetSpecificDealsIntent Handler")
 
-    feed = get_slickdeals_feed(SLICKDEALS_URL)
-    deals = get_top_slickdeals(feed)
+    deals = slickdeals.get_slickdeals("some specific deals")
 
     speech_text = "There are {0} deals. The first deal is {1}".format(
         len(deals), deals[0]
@@ -225,74 +221,6 @@ def all_exception_handler(handler_input, exception):
 
 
 handler = SKILL_BUILDER.lambda_handler()
-
-
-###
-# Slickdeals Functions
-###
-
-
-def get_slickdeals(event, context):
-    """
-    Purpose:
-        Handler function for a Lambda function. Will take in an
-        event object that triggers the function call and the context
-        related to the event.
-    Args:
-        event (Dict): Dict with event details from the triggering event
-            for the function.
-        context (Dict): Metadata and context for the function call triggering
-            the lambda function
-    Return:
-        N/A
-    """
-    logging.info("Starting Lambda to pull top slickdeals")
-
-    feed = get_slickdeals_feed(SLICKDEALS_URL)
-    deals = get_top_slickdeals(feed)
-
-    logging.info("Lambda to pull top slickdeals Complete")
-
-    return deals
-
-
-def get_slickdeals_feed(feed_url):
-    """
-    Purpose:
-        Responsible for establising a feed object subscribed to the
-        Slickdeals top deals feed
-    Args:
-        feed_url (String): URL of the top deals feed from slickdeals
-    Return:
-        feed (Feed Object): Feed object from feedparser of the RSS Feed
-    """
-    logging.info("Getting Slickdeals Feed")
-
-    return feedparser.parse(feed_url)
-
-
-def get_top_slickdeals(feed, keyword=None):
-    """
-    Purpose:
-        Responsible for looping through the feed object and pulling the
-        top 25 deals and filtering out any deals that do not match the
-        keyword provided
-    Args:
-        feed (Feed Object): Feed object from feedparser of the RSS Feed
-        keyword (String): keyword to filter deals on (if applicable)
-    Return:
-        deals (List of Strings): Title of all deals pulled
-    """
-    logging.info("Geting Top SlickDeals")
-
-    if keyword:
-        return [
-            deal["title"]
-            for deal in feed["entries"]
-            if keyword.lower() in deal["title"].lower()
-        ]
-    else:
-        return [deal["title"] for deal in feed["entries"]]
 
 
 if __name__ == "__main__":
