@@ -83,7 +83,7 @@ def get_new_deals_intent_handler(handler_input):
     return (
         handler_input.response_builder.speak(speech_text)
         .set_card(SimpleCard("Slick Deals", speech_text))
-        .set_should_end_session(True)
+        .set_should_end_session(False)
         .response
     )
 
@@ -92,7 +92,8 @@ def get_new_deals_intent_handler(handler_input):
 def get_specfic_deals_intent_handler(handler_input):
     """
     Purpose:
-        Handler for getting new deals. Will pull deals from the RSS Feed based on
+        Handler for getting new deals based on a user defined filter.
+        Will pull deals from the RSS Feed based on
         a specific filter and loop through until one is found
     Args:
         handler_input (Dict): Input data from the Alexa Skill
@@ -103,9 +104,8 @@ def get_specfic_deals_intent_handler(handler_input):
 
     request_slots = get_slots_from_request(handler_input)
     raw_deal_filter = request_slots["deal_type"].value
-
-    deals =\
-        slickdeals.get_slickdeals(raw_deal_filter=raw_deal_filter)
+    deal_filters = slickdeals.parse_raw_deal_filters(raw_deal_filter)
+    deals = slickdeals.get_slickdeals(deal_filters=deal_filters)
 
     if deals:
         speech_text = f"Here are the deals for {raw_deal_filter}: "
@@ -117,7 +117,71 @@ def get_specfic_deals_intent_handler(handler_input):
     return (
         handler_input.response_builder.speak(speech_text)
         .set_card(SimpleCard("Slick Deals", speech_text))
-        .set_should_end_session(True)
+        .set_should_end_session(False)
+        .response
+    )
+
+
+@SKILL_BUILDER.request_handler(can_handle_func=is_intent_name("GetChrisDealsIntent"))
+def get_chris_deals_intent_handler(handler_input):
+    """
+    Purpose:
+        Handler for getting new deals specific to Chris.
+        Will pull deals from the RSS Feed based on
+        a specific filter and loop through until one is found
+    Args:
+        handler_input (Dict): Input data from the Alexa Skill
+    Return:
+        alexa_reponse (Dict): Reponse for Alexa Skill to handle
+    """
+    logging.info("In the GetChrisDealsIntent Handler")
+
+    deal_filters = slickdeals.get_chris_filters()
+    deals = slickdeals.get_slickdeals(deal_filters=deal_filters)
+
+    if deals:
+        speech_text = "Here are the deals for Chris: "
+        for idx, deal in enumerate(deals[:10]):
+            speech_text += f"Deal number {idx+1} is {deal}. "
+    else:
+        speech_text = f"There are no deals for Chris"
+
+    return (
+        handler_input.response_builder.speak(speech_text)
+        .set_card(SimpleCard("Slick Deals", speech_text))
+        .set_should_end_session(False)
+        .response
+    )
+
+
+@SKILL_BUILDER.request_handler(can_handle_func=is_intent_name("GetBrittanyDealsIntent"))
+def get_brittany_deals_intent_handler(handler_input):
+    """
+    Purpose:
+        Handler for getting new deals specific to Chris.
+        Will pull deals from the RSS Feed based on
+        a specific filter and loop through until one is found
+    Args:
+        handler_input (Dict): Input data from the Alexa Skill
+    Return:
+        alexa_reponse (Dict): Reponse for Alexa Skill to handle
+    """
+    logging.info("In the GetBrittanyDealsIntent Handler")
+
+    deal_filters = slickdeals.get_brittany_filters()
+    deals = slickdeals.get_slickdeals(deal_filters=deal_filters)
+
+    if deals:
+        speech_text = "Here are the deals for Brittany: "
+        for idx, deal in enumerate(deals[:10]):
+            speech_text += f"Deal number {idx+1} is {deal}. "
+    else:
+        speech_text = f"There are no deals for Brittany"
+
+    return (
+        handler_input.response_builder.speak(speech_text)
+        .set_card(SimpleCard("Slick Deals", speech_text))
+        .set_should_end_session(False)
         .response
     )
 
