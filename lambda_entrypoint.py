@@ -73,9 +73,12 @@ def get_new_deals_intent_handler(handler_input):
 
     deals = slickdeals.get_slickdeals()
 
-    speech_text = "There are {0} deals. The first deal is {1}".format(
-        len(deals), deals[0]
-    )
+    if deals:
+        speech_text = f"Here are the deals: "
+        for idx, deal in enumerate(deals[:10]):
+            speech_text += f"Deal number {idx+1} is {deal}. "
+    else:
+        speech_text = f"There are no deals"
 
     return (
         handler_input.response_builder.speak(speech_text)
@@ -98,11 +101,18 @@ def get_specfic_deals_intent_handler(handler_input):
     """
     logging.info("In the GetSpecificDealsIntent Handler")
 
-    deals = slickdeals.get_slickdeals("some specific deals")
+    request_slots = get_slots_from_request(handler_input)
+    raw_deal_filter = request_slots["deal_type"].value
 
-    speech_text = "There are {0} deals. The first deal is {1}".format(
-        len(deals), deals[0]
-    )
+    deals =\
+        slickdeals.get_slickdeals(raw_deal_filter=raw_deal_filter)
+
+    if deals:
+        speech_text = f"Here are the deals for {raw_deal_filter}: "
+        for idx, deal in enumerate(deals[:10]):
+            speech_text += f"Deal number {idx+1} is {deal}. "
+    else:
+        speech_text = f"There are no deals that match {raw_deal_filter}"
 
     return (
         handler_input.response_builder.speak(speech_text)
@@ -210,7 +220,7 @@ def all_exception_handler(handler_input, exception):
     Return:
         alexa_reponse (Dict): Reponse for Alexa Skill to handle
     """
-    logging.excepttion(
+    logging.exception(
         f"Exception in lambda_entrypoint: {exception}", exc_info=True
     )
 
@@ -221,6 +231,25 @@ def all_exception_handler(handler_input, exception):
 
 
 handler = SKILL_BUILDER.lambda_handler()
+
+
+###
+# Helper Functions
+###
+
+
+def get_slots_from_request(handler_input):
+    """
+    Purpose:
+        Parse out the Slots from the handler inputs
+    Args:
+        handler_input (Dict): Input data from the Alexa Skill
+    Return:
+        request_slots (Dict): Dict with Slots passed from the
+            Request in the Alexda Skill
+    """
+
+    return handler_input.request_envelope.request.intent.slots
 
 
 if __name__ == "__main__":
