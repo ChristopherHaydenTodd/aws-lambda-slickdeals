@@ -17,11 +17,12 @@ import logging
 # Define Loggers
 ###
 
+
 def get_stdout_logging(
     log_level=logging.DEBUG,
-    log_msg_fmt='%(asctime)s.%(msecs)03d %(levelname)s %(message)s',
-    log_date_fmt='%a, %d %b %Y %H:%M:%S',
-    log_prefix=None
+    log_msg_fmt="%(asctime)s.%(msecs)03d %(levelname)s %(message)s",
+    log_date_fmt="%a, %d %b %Y %H:%M:%S",
+    log_prefix=None,
 ):
     """
     Purpose:
@@ -48,10 +49,7 @@ def get_stdout_logging(
         log_msg_fmt = f"{log_prefix}{log_msg_fmt}"
 
     logging.basicConfig(
-        stream=sys.stdout,
-        level=log_level,
-        format=log_msg_fmt,
-        datefmt=log_date_fmt
+        stream=sys.stdout, level=log_level, format=log_msg_fmt, datefmt=log_date_fmt
     )
 
     return logging
