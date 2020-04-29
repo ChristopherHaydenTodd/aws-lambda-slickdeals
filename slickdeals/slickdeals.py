@@ -189,4 +189,3 @@ def shorten_deal_title(deal_title, words_to_keep=10):
     logging.info(f"Shortening Title {deal_title} to {words_to_keep} words")
 
     return " ".join(deal_title.split()[:words_to_keep])
-
