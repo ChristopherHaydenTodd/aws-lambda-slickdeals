@@ -4,10 +4,13 @@
 # AWS Cli (installed with python)
 #
 # Arguments:
-# N/A
+# -z [value], --zip [value], --zip=[value]
+#    Specify the zipfile base name
+# -v [value], --version [value], --version=[value]
+#    Specify the version to build
 #
 # Example:
-# sh create_deployable_zip.sh
+# sh upload_lambda_function.sh
 # -----------------------------------------------------------------------------
 
 
@@ -27,10 +30,12 @@ function log {
 # Arguments
 ###
 
-FORCE=false
+
+AWS_PROFILE="default"
+BASE_ZIP_FILENAME="slickdeals-top-deals"
+LAMBDA_FUNCTION="slickdeals-top-deals"
 PWD=$(pwd)
 VERSION=$(cat ../VERSION)
-BASE_ZIP_FILENAME="slickdeals-top-deals"
 
 # Parse CLI Arguments
 while [ "$#" -gt 0 ]
@@ -38,10 +43,6 @@ do
     key="$1"
 
     case $key in
-        -f|--force)
-        FORCE=true
-        shift
-        ;;
         -z|--zip)
         BASE_ZIP_FILENAME="$2"
         shift
@@ -59,6 +60,28 @@ do
         --version=*)
         eval VERSION="${1#*=}"
         shift
+        ;;
+        -a|--aws)
+        AWS_PROFILE="$2"
+        shift
+        shift
+        ;;
+        --aws=*)
+        eval AWS_PROFILE="${1#*=}"
+        shift
+        ;;
+        -l|--lambda)
+        LAMBDA_FUNCTION="$2"
+        shift
+        shift
+        ;;
+        --lambda=*)
+        eval LAMBDA_FUNCTION="${1#*=}"
+        shift
+        ;;
+        -h|--help)
+        echo "Usage: sh upload_lambda_function.sh [-h] [--version value] [--zip value] [--aws value] [--lambda value]"
+        exit 1
         ;;
         *)
         shift
@@ -78,19 +101,15 @@ done
 
 ZIP_FILENAME="$PWD/releases/$BASE_ZIP_FILENAME-$VERSION.zip"
 
-if [[ -z "$VIRTUAL_ENV" ]]; then
-  log "ERROR" "Python Virtual Environment is NOT Active. You need to be active to install libaries"
-  exit 1
-elif [[ "$VIRTUAL_ENV" != *"slickdeals-venv"* ]]; then
-  log "ERROR" "Incorrect Python Virtual Environment is set, need 'slickdeals-venv' not '$VIRTUAL_ENV'"
-  exit 1
-fi
-
 
 ###
 # Execute Commands
 ###
 
 
-log "INFO" "Pushing Zip"
-aws lambda update-function-code --function-name=slickdeals-top-deals --zip-file=fileb://slickdeals-top-deals.zip
+log "INFO" "AWS Profile: $AWS_PROFILE"
+log "INFO" "Pushing Zip ($ZIP_FILENAME) to Lambda Function ($LAMBDA_FUNCTION)"
+aws lambda update-function-code \
+  --profile=$AWS_PROFILE \
+  --function-name=$LAMBDA_FUNCTION \
+  --zip-file=fileb://$ZIP_FILENAME
