@@ -11,11 +11,11 @@ import json
 import logging
 import os
 import sys
+from ask_sdk_core.handler_input import HandlerInput
 from ask_sdk_core.skill_builder import SkillBuilder
 from ask_sdk_core.utils import is_request_type, is_intent_name
-from ask_sdk_core.handler_input import HandlerInput
-from ask_sdk_model.ui import SimpleCard
 from ask_sdk_model import Response
+from ask_sdk_model.ui import SimpleCard
 
 # Local Library Imports
 BASE_PROJECT_PATH = f"{os.path.dirname(os.path.realpath(__file__))}/../"
@@ -23,13 +23,19 @@ sys.path.insert(0, BASE_PROJECT_PATH)
 from utils import loggers
 from slickdeals import slickdeals
 
+
+###
+# Globals
+###
+
+
 # Configure Logging
 loggers.clear_log_handlers()
 logging = loggers.get_stdout_logging(
     log_level=logging.INFO, log_prefix="[slickdeals_deals]: "
 )
 
-# Globals
+# Create Skill Builder
 SKILL_BUILDER = SkillBuilder()
 
 
@@ -49,6 +55,9 @@ def launch_request_handler(handler_input):
         alexa_reponse (Dict): Reponse for Alexa Skill to handle
     """
     logging.info("In the LaunchRequest Handler")
+
+    print(dir(handler_input))
+    print(dir(handler_input.context))
 
     speech_text = "Welcome to the Slick Deals Alexa Skill"
 
@@ -210,10 +219,10 @@ def help_intent_handler(handler_input):
 
 
 @SKILL_BUILDER.request_handler(
-    can_handle_func=lambda handler_input: is_intent_name("AMAZON.CancelIntent")(
-        handler_input
+    can_handle_func=lambda handler_input: (
+        is_intent_name("AMAZON.CancelIntent")(handler_input)
+        or is_intent_name("AMAZON.StopIntent")(handler_input)
     )
-    or is_intent_name("AMAZON.StopIntent")(handler_input)
 )
 def cancel_and_stop_intent_handler(handler_input):
     """
@@ -285,17 +294,12 @@ def all_exception_handler(handler_input, exception):
     Return:
         alexa_reponse (Dict): Reponse for Alexa Skill to handle
     """
-    logging.exception(
-        f"Exception in lambda_entrypoint: {exception}", exc_info=True
-    )
+    logging.exception(f"Exception in lambda_entrypoint: {exception}", exc_info=True)
 
     speech_text = "Sorry, there was some problem. Please try again"
     handler_input.response_builder.speak(speech_text).ask(speech_text)
 
     return handler_input.response_builder.response
-
-
-handler = SKILL_BUILDER.lambda_handler()
 
 
 ###
@@ -317,12 +321,27 @@ def get_slots_from_request(handler_input):
     return handler_input.request_envelope.request.intent.slots
 
 
+###
+# Declare Handler
+###
+
+
+handler = SKILL_BUILDER.lambda_handler()
+
+
+###
+# Main Execution
+###
+
+
 if __name__ == "__main__":
+
+    import pdb; pdb.set_trace()
 
     try:
         example_event = {}
         example_context = []
-        for deal in lambda_handler(example_event, example_context):
+        for deal in handler(example_event, example_context):
             logging.info(f"Deal Found: {deal}")
     except Exception as err:
         logging.exception(f"{os.path.basename(__file__)} failed due to error: {err}")
