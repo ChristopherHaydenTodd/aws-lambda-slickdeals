@@ -33,10 +33,10 @@ function log {
 # Arguments
 ###
 
+BASE_ZIP_FILENAME="slickdeals-top-deals"
 FORCE=false
 PWD=$(pwd)
 VERSION=$(cat ../VERSION)
-BASE_ZIP_FILENAME="slickdeals-top-deals"
 
 # Parse CLI Arguments
 while [ "$#" -gt 0 ]
@@ -89,10 +89,10 @@ done
 ZIP_FILENAME="$PWD/releases/$BASE_ZIP_FILENAME-$VERSION.zip"
 
 if [[ -z "$VIRTUAL_ENV" ]]; then
-  log "INFO" "Python Virtual Environment is NOT Active. You need to be active to install libaries"
+  log "ERROR" "Python Virtual Environment is NOT Active. You need to be active to install libaries"
   exit 1
 elif [[ "$VIRTUAL_ENV" != *"slickdeals-venv"* ]]; then
-  log "INFO" "Incorrect Python Virtual Environment is set, need 'slickdeals-venv' not '$VIRTUAL_ENV'"
+  log "ERROR" "Incorrect Python Virtual Environment is set, need 'slickdeals-venv' not '$VIRTUAL_ENV'"
   exit 1
 fi
 
@@ -116,7 +116,7 @@ if test -f "$ZIP_FILENAME"; then
 fi
 
 log "INFO" "Creating Zip and Adding Lambda Entrypoint to Zip File"
-zip -r -q -j $ZIP_FILENAME ../lambda/lambda_entrypoint.py
+zip -r -q -j $ZIP_FILENAME ../lambda_entrypoint/lambda_entrypoint.py
 
 log "INFO" "Adding Utilities/Local Libraries to Zip File"
 zip -r -q $ZIP_FILENAME ../utils/*.py ../slickdeals/*.py
