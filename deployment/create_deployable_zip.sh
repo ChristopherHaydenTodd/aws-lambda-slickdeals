@@ -116,12 +116,12 @@ if test -f "$ZIP_FILENAME"; then
 fi
 
 log "INFO" "Creating Zip and Adding Lambda Entrypoint to Zip File"
-zip -r -q $ZIP_FILENAME ../lambda_entrypoint.py
+zip -r -q -j $ZIP_FILENAME ../lambda/lambda_entrypoint.py
 
 log "INFO" "Adding Utilities/Local Libraries to Zip File"
-zip -r -q $ZIP_FILENAME ../utils/*.py
+zip -r -q $ZIP_FILENAME ../utils/*.py ../slickdeals/*.py
 
 log "INFO" "Adding PIP Installed Packages to Zip File"
-cd ../venv/slickdeals-venv/lib/python3.7/site-packages/
+cd ../environment/slickdeals-venv/lib/python3.7/site-packages/
 zip -r9 -q $ZIP_FILENAME .
 cd $PWD
