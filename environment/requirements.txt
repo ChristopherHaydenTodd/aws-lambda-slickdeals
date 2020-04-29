@@ -1,3 +1,4 @@
 ask-sdk-core==1.13.0
 feedparser==5.2.1
+python-lambda-local==0.1.12
 requests==2.23.0
