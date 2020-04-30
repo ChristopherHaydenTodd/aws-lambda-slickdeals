@@ -14,6 +14,7 @@ import logging
 import re
 import sys
 
+
 # Globals
 SLICKDEALS_URLS = [
     "https://slickdeals.net/newsearch.php?mode=frontpage&searcharea=deals&searchin=first&rss=1",
@@ -42,28 +43,20 @@ def get_slickdeals(deal_filters=None):
     deals = []
     for feed in feeds:
         for deal in get_top_slickdeals(feed, deal_filters=deal_filters):
-            deals.append(deal)
+            deals.append(
+                clean_deal_title(
+                    shorten_deal_title(
+                        deal
+                    )
+                )
+            )
+
     deals = list(set(deals))
     deals.sort()
 
     logging.info("Function to pull top slickdeals Complete")
 
     return deals
-
-
-def get_slickdeals_feed(feed_urls):
-    """
-    Purpose:
-        Responsible for establising a feed object subscribed to the
-        Slickdeals top deals feed
-    Args:
-        feed_url (String): URL of the top deals feed from slickdeals
-    Return:
-        feed (Feed Object): Feed object from feedparser of the RSS Feed
-    """
-    logging.info("Getting Slickdeals Feed")
-
-    return [feedparser.parse(feed_url) for feed_url in feed_urls]
 
 
 def get_top_slickdeals(feed, deal_filters=None):
@@ -85,16 +78,41 @@ def get_top_slickdeals(feed, deal_filters=None):
     if deal_filters:
         for deal in feed["entries"]:
             deal_passes_filter = False
+
             for deal_filter in deal_filters:
                 if deal_filter in deal["title"].lower():
                     deal_passes_filter = True
                     break
+
             if deal_passes_filter:
-                deals.append(shorten_deal_title(deal["title"]))
+                deals.append(deal["title"])
     else:
-        deals = [shorten_deal_title(deal["title"]) for deal in feed["entries"]]
+        deals = [
+            deal["title"]
+            for deal
+            in feed["entries"]
+        ]
 
     return deals
+
+
+def get_slickdeals_feed(feed_urls):
+    """
+    Purpose:
+        Responsible for establising a feed object subscribed to the
+        Slickdeals top deals feed
+    Args:
+        feed_url (String): URL of the top deals feed from slickdeals
+    Return:
+        feed (Feed Object): Feed object from feedparser of the RSS Feed
+    """
+    logging.info("Getting Slickdeals Feed")
+
+    return [
+        feedparser.parse(feed_url)
+        for feed_url
+        in feed_urls
+    ]
 
 
 ###
@@ -189,3 +207,21 @@ def shorten_deal_title(deal_title, words_to_keep=10):
     logging.info(f"Shortening Title {deal_title} to {words_to_keep} words")
 
     return " ".join(deal_title.split()[:words_to_keep])
+
+
+def clean_deal_title(deal_title):
+    """
+    Purpose:
+        Clean deal title for text to speech.
+    Args:
+        deal_title (String): Title to clean
+    Return:
+        clean_deal_title (String): Cleaned Deal Title
+    """
+    logging.info("Cleaning Deal Title")
+
+    # Stripping Non Alpha-Numeric Characters and Converting to List
+    alphanumeric_pattern = r"[^A-Za-z0-9\ \$\.]+"
+    clean_deal_title = re.sub(alphanumeric_pattern, "", deal_title)
+
+    return clean_deal_title
