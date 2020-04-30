@@ -40,7 +40,7 @@ class SlickdealsUi(object):
     urls = {
         "hot_deals": (
             "https://slickdeals.net/forums/filtered/?f=9&daysprune=7&order="
-            "desc&pp=200&sort=threadstarted&vote=4"
+            "desc&pp={num_deals}&sort=threadstarted&vote=4"
         ),
     }
 
@@ -69,7 +69,7 @@ class SlickdealsUi(object):
     ###
 
     @classmethod
-    def get_hot_deals(cls):
+    def get_hot_deals(cls, num_deals=20):
         """
         Purpose:
             Get Hot Deals from Slickdeals UI; parse and return.
@@ -80,7 +80,8 @@ class SlickdealsUi(object):
         """
         logging.info("Getting Hot Deals from SlickDeals")
 
-        raw_hot_deals_html = cls.request_hot_deals_from_slickdeals_ui()
+        raw_hot_deals_html =\
+            cls.request_hot_deals_from_slickdeals_ui(num_deals=num_deals)
         hot_deals = cls.parse_hot_deals_html(raw_hot_deals_html)
 
         return hot_deals
@@ -90,7 +91,7 @@ class SlickdealsUi(object):
     ###
 
     @classmethod
-    def request_hot_deals_from_slickdeals_ui(cls):
+    def request_hot_deals_from_slickdeals_ui(cls, num_deals=20):
         """
         Purpose:
             Get Hot Deals from Slickdeals UI.
@@ -103,7 +104,7 @@ class SlickdealsUi(object):
 
         logging.info(f"Fetching HTML from Slickdeals: {cls.urls['hot_deals']}")
         hot_deals_response = requests.get(
-            cls.urls["hot_deals"],
+            cls.urls["hot_deals"].format(num_deals=num_deals),
             headers=cls.expected_headers
         )
 
