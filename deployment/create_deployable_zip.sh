@@ -22,7 +22,6 @@
 # Helper Functions and Setup
 ###
 
-set -e
 
 function log {
   echo "$(date +%c) $1: $2"
