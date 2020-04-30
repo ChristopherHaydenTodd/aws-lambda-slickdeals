@@ -37,7 +37,7 @@ AWS_PROFILE="default"
 BASE_ZIP_FILENAME="slickdeals-top-deals"
 BASE_CONFIG_FILENAME="config"
 LAMBDA_FUNCTION="slickdeals-top-deals"
-PWD=$(pwd)
+CURRENT_DIR=$(pwd)
 VERSION=$(cat ../VERSION)
 
 # Parse CLI Arguments
