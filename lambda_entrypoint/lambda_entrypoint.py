@@ -125,7 +125,11 @@ def get_version_intent_handler(handler_input):
     """
     logging.info("In the GetVersionDealsIntent Handler")
 
-    speech_text = f"Slick Deals Alexa Skill Version {os.environ['VERSION']}"
+    # Get version from environment if its set
+    version = os.environ.get("VERSION", "unknown")
+
+    speech_text = f"Slick Deals Alexa Skill Version {version}"
+    logging.info(speech_text)
 
     return (
         handler_input.response_builder.speak(speech_text)
