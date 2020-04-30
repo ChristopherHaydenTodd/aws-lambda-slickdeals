@@ -150,3 +150,12 @@ UPLOADED_REVISION=$(aws lambda get-function-configuration \
   --function-name=$LAMBDA_FUNCTION \
   | jq -r '.RevisionId'
 )
+
+log "INFO" "Verifying New Revision Was Created"
+if [ "$INITIAL_REVISION" == "$UPLOADED_REVISION" ] ; then
+  log "ERROR" "No New Revision Created, Failed to Upload"
+  exit 1
+else
+  log "INFO" "Uploaded Revision $UPLOADED_REVISION"
+fi
+
