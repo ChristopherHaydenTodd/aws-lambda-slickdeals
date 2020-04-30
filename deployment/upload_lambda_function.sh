@@ -143,3 +143,10 @@ aws lambda update-function-code \
   --profile=$AWS_PROFILE \
   --function-name=$LAMBDA_FUNCTION \
   --zip-file=fileb://$ZIP_FILENAME
+
+log "INFO" "Getting Updated Revision"
+UPLOADED_REVISION=$(aws lambda get-function-configuration \
+  --profile=$AWS_PROFILE \
+  --function-name=$LAMBDA_FUNCTION \
+  | jq -r '.RevisionId'
+)
