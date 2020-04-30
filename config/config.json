@@ -1,0 +1,15 @@
+{
+    "FunctionName": "slickdeals-top-deals",
+    "Handler": "lambda_entrypoint.handler",
+    "Description": "AWS Lambda function for getting Slickdeals deals",
+    "Timeout": 30,
+    "MemorySize": 128,
+    "Environment": {
+        "Variables": {
+            "ENVIRONMENT": "production",
+            "VERSION": "1.1.0"
+        }
+    },
+    "Runtime": "python3.7",
+    "Layers": []
+}
