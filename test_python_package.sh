@@ -58,3 +58,7 @@ done
 # Execute Commands
 ###
 
+
+log "INFO" "Running Unit Tests (Setup File = ${SETUP_FILE})"
+python3 ${SETUP_FILE} test
+
