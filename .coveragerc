@@ -10,5 +10,7 @@ omit =
     # Omit __init__ files
     */__init__.py
 
+[report]
+fail_under = 20
 [html]
 directory = htmlcov
