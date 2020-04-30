@@ -111,7 +111,12 @@ done
 ###
 
 
-ZIP_FILENAME="$PWD/releases/$BASE_ZIP_FILENAME-$VERSION.zip"
+ZIP_FILENAME="$CURRENT_DIR/releases/$BASE_ZIP_FILENAME-$VERSION.zip"
+log "INFO" "Checking Zip File Exists: $ZIP_FILENAME"
+if ! test -f "$ZIP_FILENAME"; then
+  log "ERROR" "Did Not Find Zip File; Exiting"
+  exit 1
+fi
 
 
 ###
