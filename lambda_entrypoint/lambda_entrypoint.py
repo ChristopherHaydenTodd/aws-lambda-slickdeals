@@ -109,6 +109,33 @@ def session_ended_request_handler(handler_input):
 
 
 ###
+# Metadata Request Handlers
+###
+
+
+@SKILL_BUILDER.request_handler(can_handle_func=is_intent_name("GetVersionDealsIntent"))
+def get_version_intent_handler(handler_input):
+    """
+    Purpose:
+        Handler for getting version of the lambda API and skill
+    Args:
+        handler_input (Dict): Input data from the Alexa Skill
+    Return:
+        alexa_reponse (Dict): Reponse for Alexa Skill to handle
+    """
+    logging.info("In the GetVersionDealsIntent Handler")
+
+    speech_text = f"Slick Deals Alexa Skill Version {os.environ['VERSION']}"
+
+    return (
+        handler_input.response_builder.speak(speech_text)
+        .set_card(SimpleCard("Slick Deals", speech_text))
+        .set_should_end_session(False)
+        .response
+    )
+
+
+###
 # Help Request Handlers
 ###
 
