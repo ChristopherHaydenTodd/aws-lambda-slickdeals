@@ -131,6 +131,13 @@ fi
 
 
 log "INFO" "AWS Profile: $AWS_PROFILE"
+
+INITIAL_REVISION=$(aws lambda get-function-configuration \
+  --profile=$AWS_PROFILE \
+  --function-name=$LAMBDA_FUNCTION \
+  | jq -r '.RevisionId'
+)
+
 log "INFO" "Pushing Zip ($ZIP_FILENAME) to Lambda Function ($LAMBDA_FUNCTION)"
 aws lambda update-function-code \
   --profile=$AWS_PROFILE \
