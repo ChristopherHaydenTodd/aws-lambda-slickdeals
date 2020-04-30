@@ -248,7 +248,7 @@ def get_specfic_deals_intent_handler(handler_input):
 
     # Get and parse filters
     raw_deal_filter = request_slots["deal_type"].value
-    deal_filters = slickdeals.parse_raw_deal_filters(raw_deal_filter)
+    deal_filters = slickdeals_utils.parse_raw_deal_filters(raw_deal_filter)
 
     # Get deals, parse deals
     deals = SlickdealsUi.get_hot_deals()
