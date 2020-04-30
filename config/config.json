@@ -7,7 +7,7 @@
     "Environment": {
         "Variables": {
             "ENVIRONMENT": "production",
-            "VERSION": "1.1.0"
+            "VERSION": "1.1.1"
         }
     },
     "Runtime": "python3.7",
