@@ -12,5 +12,6 @@ omit =
 
 [report]
 fail_under = 20
+ignore_errors = True
 [html]
 directory = htmlcov
