@@ -76,3 +76,4 @@ if [ "$(uname -s)" == "Darwin" ] && $OPEN_CODE_COVERAGE; then
     open htmlcov/index.html
 fi
 
+exit $TEST_STATUS
