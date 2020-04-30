@@ -1,3 +1,11 @@
 #
 # Pytest Coverage Configuration File
 #
+
+[run]
+branch = True
+omit =
+    # Test Files
+    */tests/*
+    # Omit __init__ files
+    */__init__.py
