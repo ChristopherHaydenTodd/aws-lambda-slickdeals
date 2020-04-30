@@ -159,3 +159,8 @@ else
   log "INFO" "Uploaded Revision $UPLOADED_REVISION"
 fi
 
+log "INFO" "Getting Lambda Function Config($LAMBDA_FUNCTION)"
+aws lambda update-function-configuration \
+  --profile=$AWS_PROFILE \
+  --function-name=$LAMBDA_FUNCTION \
+  --cli-input-json file://$CONFIG_FILENAME
