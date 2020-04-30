@@ -76,23 +76,23 @@
             }
         ]
     },
-	"request": {
-		"type": "IntentRequest",
+    "request": {
+        "type": "IntentRequest",
         "requestId": "amzn1.echo-api.request.GENERATED",
         "timestamp": "2020-04-29T00:00:00Z",
-		"locale": "en-US",
-		"intent": {
-			"name": "GetSpecificDealsIntent",
-			"confirmationStatus": "NONE",
-			"slots": {
-				"deal_type": {
-					"name": "deal_type",
-					"value": "Brittany",
-					"confirmationStatus": "NONE",
-					"source": "USER"
-				}
-			}
-		},
-		"dialogState": "COMPLETED"
-	}
+        "locale": "en-US",
+        "intent": {
+            "name": "GetSpecificDealsIntent",
+            "confirmationStatus": "NONE",
+            "slots": {
+                "deal_type": {
+                    "name": "deal_type",
+                    "value": "Nintendo",
+                    "confirmationStatus": "NONE",
+                    "source": "USER"
+                }
+            }
+        },
+        "dialogState": "COMPLETED"
+    }
 }
