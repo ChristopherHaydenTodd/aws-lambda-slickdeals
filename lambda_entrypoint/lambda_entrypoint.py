@@ -184,7 +184,7 @@ def get_brittany_deals_intent_handler(handler_input):
     if deals:
         speech_text = "Here are the deals for Brittany: "
         for idx, deal in enumerate(deals[:10]):
-            speech_text += f"Deal number {idx+1} is {deal}. "
+            speech_text += f"Deal number {idx + 1} is {deal}. "
     else:
         speech_text = f"There are no deals for Brittany"
 
@@ -335,8 +335,6 @@ handler = SKILL_BUILDER.lambda_handler()
 
 
 if __name__ == "__main__":
-
-    import pdb; pdb.set_trace()
 
     try:
         example_event = {}
