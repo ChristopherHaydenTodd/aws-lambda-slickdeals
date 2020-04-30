@@ -51,9 +51,6 @@ do
         exit 1
         ;;
         *)
-        shift
-        ;;
-        *)
         log "ERROR" "Unknown argument \"$1\", exiting"
         exit 1
         ;;
