@@ -76,3 +76,8 @@ done
 
 
 log "INFO" "AWS Profile: $AWS_PROFILE"
+
+log "INFO" "Getting Lambda Function ($LAMBDA_FUNCTION)"
+aws lambda get-function \
+  --profile=$AWS_PROFILE \
+  --function-name=$LAMBDA_FUNCTION
