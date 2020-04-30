@@ -118,6 +118,12 @@ if ! test -f "$ZIP_FILENAME"; then
   exit 1
 fi
 
+CONFIG_FILENAME="$CURRENT_DIR/../config/$BASE_CONFIG_FILENAME.json"
+log "INFO" "Checking Config File Exists: $CONFIG_FILENAME"
+if ! test -f "$CONFIG_FILENAME"; then
+  log "ERROR" "Did Not Find Config File; Exiting"
+  exit 1
+fi
 
 ###
 # Execute Commands
