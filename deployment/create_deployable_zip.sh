@@ -143,3 +143,8 @@ log "INFO" "Adding PIP Installed Packages to Zip File"
 cd ../environment/slickdeals-venv/lib/python3.7/site-packages/
 zip -r9 -q $ZIP_FILENAME .
 cd $CURRENT_DIR
+
+log "INFO" "Cleaning up cache from build"
+cd ../
+sh clean_python_package.sh
+cd $CURRENT_DIR
