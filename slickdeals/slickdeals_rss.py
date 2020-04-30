@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
     Purpose:
         SlickdealsRss Class. Handles requesting data from Slickdeals RSS feed and

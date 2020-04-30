@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
     Purpose:
         Utilities for working with Slickdeals.

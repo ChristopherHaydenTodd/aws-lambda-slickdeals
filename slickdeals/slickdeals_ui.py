@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
     Purpose:
         SlickdealsUi Class. Handles requesting data from Slickdeals website and
