@@ -35,7 +35,7 @@ function log {
 
 BASE_ZIP_FILENAME="slickdeals-top-deals"
 FORCE=false
-PWD=$(pwd)
+CURRENT_DIR=$(pwd)
 VERSION=$(cat ../VERSION)
 
 # Parse CLI Arguments
@@ -86,7 +86,7 @@ done
 ###
 
 
-ZIP_FILENAME="$PWD/releases/$BASE_ZIP_FILENAME-$VERSION.zip"
+ZIP_FILENAME="$CURRENT_DIR/releases/$BASE_ZIP_FILENAME-$VERSION.zip"
 
 if [[ -z "$VIRTUAL_ENV" ]]; then
   log "ERROR" "Python Virtual Environment is NOT Active. You need to be active to install libaries"
@@ -124,4 +124,4 @@ zip -r -q $ZIP_FILENAME ../utils/*.py ../slickdeals/*.py
 log "INFO" "Adding PIP Installed Packages to Zip File"
 cd ../environment/slickdeals-venv/lib/python3.7/site-packages/
 zip -r9 -q $ZIP_FILENAME .
-cd $PWD
+cd $CURRENT_DIR
