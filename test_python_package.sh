@@ -69,3 +69,10 @@ if [ "$TEST_STATUS" == "0" ]; then
 else
     log "ERROR" "Tests Failed: ${TEST_STATUS}"
 fi
+
+# Open Code Coverage only works on certain OS
+if [ "$(uname -s)" == "Darwin" ] && $OPEN_CODE_COVERAGE; then
+    log "INFO" "Opening the Test Coverage Report"
+    open htmlcov/index.html
+fi
+
