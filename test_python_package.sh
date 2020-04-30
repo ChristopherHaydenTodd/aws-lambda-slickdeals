@@ -62,3 +62,10 @@ done
 log "INFO" "Running Unit Tests (Setup File = ${SETUP_FILE})"
 python3 ${SETUP_FILE} test
 
+# Getting status of tests
+TEST_STATUS=$?
+if [ "$TEST_STATUS" == "0" ]; then
+    log "INFO" "Tests Passed: ${TEST_STATUS}"
+else
+    log "ERROR" "Tests Failed: ${TEST_STATUS}"
+fi
