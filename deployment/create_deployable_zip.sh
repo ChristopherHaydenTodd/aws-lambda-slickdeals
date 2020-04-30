@@ -128,7 +128,7 @@ if test -f "$ZIP_FILENAME"; then
     log "ERROR" "--force not set, exiting"
     exit 1
   else
-    log "INFO" "--force set, Qverwriting Zip File"
+    log "INFO" "--force set, Overwriting Zip File"
     rm -rf $ZIP_FILENAME
   fi
 fi
