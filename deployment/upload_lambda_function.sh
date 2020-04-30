@@ -8,9 +8,13 @@
 #    Specify the zipfile base name
 # -v [value], --version [value], --version=[value]
 #    Specify the version to build
+# -a [value], --aws [value], --aws=[value]
+#    AWS Profile to us to connect to AWS
+# -l [value], --lambda [value], --lambda=[value]
+#    Name of the lambda function to upload/overwrite
 #
 # Example:
-# sh upload_lambda_function.sh
+# sh upload_lambda_function.sh --aws=personal
 # -----------------------------------------------------------------------------
 
 
@@ -31,6 +35,7 @@ function log {
 
 AWS_PROFILE="default"
 BASE_ZIP_FILENAME="slickdeals-top-deals"
+BASE_CONFIG_FILENAME="config"
 LAMBDA_FUNCTION="slickdeals-top-deals"
 PWD=$(pwd)
 VERSION=$(cat ../VERSION)
@@ -48,6 +53,15 @@ do
         ;;
         --zip=*)
         eval BASE_ZIP_FILENAME="${1#*=}"
+        shift
+        ;;
+        -c|--config)
+        BASE_CONFIG_FILENAME="$2"
+        shift
+        shift
+        ;;
+        --config=*)
+        eval BASE_CONFIG_FILENAME="${1#*=}"
         shift
         ;;
         -v|--version)
