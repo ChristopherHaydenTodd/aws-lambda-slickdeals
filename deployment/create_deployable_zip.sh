@@ -101,6 +101,25 @@ fi
 # Execute Commands
 ###
 
+echo "$CURRENT_DIR"
+
+log "INFO" "Running Tests"
+cd ../
+sh test_python_package.sh &> /dev/null
+TEST_STATUS=$?
+if [ "$TEST_STATUS" == "0" ]; then
+    log "ERROR" "Tests Passed: ${TEST_STATUS}"
+else
+    log "ERROR" "Tests Failed: ${TEST_STATUS}"
+    if ! $FORCE; then
+      log "ERROR" "--force not set, exiting"
+      exit 1
+    else
+      log "INFO" "--force set, Building even with failed tests"
+    fi
+fi
+cd $CURRENT_DIR
+
 log "INFO" "Packaging Zip File: $ZIP_FILENAME"
 
 log "INFO" "Checking File Not Exists or Force"
