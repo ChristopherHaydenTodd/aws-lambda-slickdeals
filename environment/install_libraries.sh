@@ -43,5 +43,11 @@ fi
 ###
 
 
-log "INFO" "Installing Required Packages"
-pip3 install -r requirements.txt
+log "INFO" "Installing Required Packages from Lambda Entrypoint"
+pip3 install -r ../lambda_entrypoint/requirements.txt
+
+log "INFO" "Installing Required Packages from Slickdeals"
+pip3 install -r ../slickdeals/requirements.txt
+
+log "INFO" "Installing Required Packages from Utils"
+pip3 install -r ../utils/requirements.txt
